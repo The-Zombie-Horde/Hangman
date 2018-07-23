@@ -2,7 +2,7 @@ import random
 import os
 from turtle import *
 import pygame
-
+# This code has so many lines because of the words
 
 WORDS = ['Awkward', 'Bagpipes', 'Banjo', 'Bungler', 'Croquet', 'Crypt', 'Dwarves', 'Fervid', 'Fishhook', 'Fjord',
          'Gazebo',
