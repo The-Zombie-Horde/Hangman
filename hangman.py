@@ -1,8 +1,236 @@
 import random
 import os
-from turtle import *
 import pygame
-# This code has so many lines because of the words
+from turtle import *
+import time
+
+
+HANGMAN = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+
+def choose_word():
+    return random.sample(WORDS, 1)  # chooses a word to play with
+
+
+def clear_screen():
+    os.system("cls" if os.name == "nt" else "clear")  # clears screen
+
+
+def hangman_1():
+    color('black')
+    pensize(5)
+    speed(5)
+    fd(150)
+    lt(180)
+    fd(100)
+    rt(90)
+    fd(300)
+    rt(90)
+    fd(75)
+    rt(90)
+    fd(50)
+
+
+def hangman_2():
+    rt(90)
+    circle(25)
+    return None
+
+def hangman_3():
+    circle(25, 180)
+    rt(90)
+    fd(25)
+    rt(90)
+    fd(50)
+    rt(180)
+    fd(100)
+    rt(180)
+    fd(50)
+    lt(90)
+    fd(25)
+
+def hangman_4():
+    rt(180)
+    fd(25)
+    lt(90)
+    fd(50)
+    lt(65)
+    fd(25)
+    lt(180)
+    fd(50)
+
+def hangman_5():
+    lt(180)
+    fd(25)
+    lt(115)
+    fd(100)
+    lt(120)
+    fd(25)
+    rt(180)
+    fd(50)
+
+def hangman_6():
+    rt(180)
+    fd(25)
+    lt(60)
+    fd(50)
+    lt(90)
+    fd(55)
+
+
+def hangman_7():
+    fd(20)
+
+
+def hangman_8():
+    rt(45)
+    fd(50)
+
+
+def hangman_9():
+    fd(25)
+
+
+def hangman_10():
+    rt(180)
+    fd(75)
+    rt(90)
+    fd(50)
+
+
+def hangman_11():
+    fd(25)
+    print('You may now close the turtle. ')
+    done()
+
+
+
+
+def game_loop():
+    fd(1)  # You must initialize turtle before pygame or else you will get an error
+    pygame.init()
+    hangman = pygame.mixer.Sound("./media/HangmanWav1.wav")
+    hangman.play()
+    input("Press 'Enter' to play Hangman!  ")  # starts game
+    pygame.init()
+    hangman = pygame.mixer.Sound("./media/RUN.wav")
+    hangman.play()
+    clear_screen()  # clears screen
+    words = choose_word()  # chooses a word
+    word = words[0]  # converts word into a str from list
+    word_guessed = [] # word in '-' and letter form
+    for _ in word:
+        word_guessed.append("-")  # create an unguessed, blank version of the word
+    joined_word = None  # joins the words in the list word_guessed
+    tries = 10  # how many times you are aloud to fail
+    guessed_letters = []  # list of all letters guessed
+    hangman_1()  # Draws hangman
+    while tries != 0 and "-" in word_guessed:
+        print("\nYou have {} attempts remaining".format(tries))
+        pygame.init()
+        hangman = pygame.mixer.Sound("./media/Tries.wav")
+        hangman.play()
+        time.sleep(3)
+        strs = ''.join(word_guessed)
+        print(strs)
+        try:
+            pygame.init()
+            hangman = pygame.mixer.Sound("./media/Select.wav")
+            hangman.play()
+            time.sleep(4)
+            player_guess = str(input("\nPlease select a letter between A-Z" + "\n> ")).lower()
+
+        except ValueError:  # check valid input
+            pygame.init()
+            hangman = pygame.mixer.Sound("./media/ValidInput.wav")
+            hangman.play()
+            print("That is not valid input. Please try again.")
+            time.sleep(3)
+            continue
+
+        else:
+            if not player_guess.isalpha():  # check the input is a letter. Also checks an input has been made.
+                pygame.init()
+                hangman = pygame.mixer.Sound("./media/NotLetter.wav")
+                hangman.play()
+                print("That is not a letter. Please try again.")
+                time.sleep(4.5)
+                continue
+            elif len(player_guess) > 1:  # check the input is only one letter
+                pygame.init()
+                hangman = pygame.mixer.Sound("./media/MoreLetter.wav")
+                hangman.play()
+                print("That is more than one letter. Please try again.")
+                time.sleep(3)
+                continue
+            elif player_guess in guessed_letters:  # check it letter hasn't been guessed already
+                pygame.init()
+                hangman = pygame.mixer.Sound("./media/Guessed.wav")
+                hangman.play()
+                print("You have already guessed that letter. Please try again.")
+                time.sleep(5)
+                continue
+            else:
+                pass
+
+        guessed_letters.append(player_guess)
+
+        for letter in range(len(word)):
+            if player_guess.lower() == (word[letter].lower()):
+                word_guessed[letter] = player_guess  # replace all letters in the chosen word that match the players guess
+                pygame.init()
+                drums = pygame.mixer.Sound("./media/drum_roll_y.wav")
+                drums.play()
+
+
+        if player_guess.lower() not in word.lower():
+            tries -= 1
+            pygame.init()
+            gasp = pygame.mixer.Sound("./media/gasp_x.wav")
+            gasp.play()
+            if HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[1]:
+                hangman_2()
+            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[2]:
+                hangman_3()
+            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[3]:
+                hangman_4()
+            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[4]:
+                hangman_5()
+            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[5]:
+                hangman_6()
+            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[6]:
+                hangman_7()
+            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[7]:
+                hangman_8()
+            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[8]:
+                hangman_9()
+            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[9]:
+                hangman_10()
+            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[10]:
+                hangman_11()
+
+    if "-" not in word_guessed:  # no blanks remaining
+        pygame.init()
+        hangman = pygame.mixer.Sound("./media/Congrats.wav")
+        hangman.play()
+        print("\nCongratulations! {} was the word!".format(word))
+        pygame.init()
+        cymbal = pygame.mixer.Sound("./media/applause3.wav")
+        cymbal.play()
+        ball = pygame.mixer.Sound("./media/woow_x.wav")
+        ball.play()
+        sphere = pygame.mixer.Sound("./media/Victory.wav")
+        sphere.play()
+        reset()
+    else:  # loop must have ended because attempts reached 0
+        pygame.init()
+        hangman = pygame.mixer.Sound("./media/Unlucky.wav")
+        hangman.play()
+        print("\nUnlucky! The word was {}.".format(word))
+        pygame.init()
+        hangman = pygame.mixer.Sound("./media/fail-trombone-02.wav")
+        hangman.play()
+
 
 WORDS = ['Awkward', 'Bagpipes', 'Banjo', 'Bungler', 'Croquet', 'Crypt', 'Dwarves', 'Fervid', 'Fishhook', 'Fjord',
          'Gazebo',
@@ -1007,199 +1235,10 @@ affair
 oh
 animal
 hope'''.split()
+
 WORDS.extend(words)
 
-HANGMAN = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 
-def choose_word():
-    return random.sample(WORDS, 1)  # chooses a word to play with
+game_loop()
 
-
-def clear_screen():
-    os.system("cls" if os.name == "nt" else "clear")  # clears screen
-
-
-def hangman_1():
-    color('black')
-    pensize(5)
-    speed(5)
-    fd(150)
-    lt(180)
-    fd(100)
-    rt(90)
-    fd(300)
-    rt(90)
-    fd(75)
-    rt(90)
-    fd(50)
-    return None
-
-def hangman_2():
-    rt(90)
-    circle(25)
-    return None
-
-def hangman_3():
-    circle(25, 180)
-    rt(90)
-    fd(25)
-    rt(90)
-    fd(50)
-    rt(180)
-    fd(100)
-    rt(180)
-    fd(50)
-    lt(90)
-    fd(25)
-
-def hangman_4():
-    rt(180)
-    fd(25)
-    lt(90)
-    fd(50)
-    lt(65)
-    fd(25)
-    lt(180)
-    fd(50)
-
-def hangman_5():
-    lt(180)
-    fd(25)
-    lt(115)
-    fd(100)
-    lt(120)
-    fd(25)
-    rt(180)
-    fd(50)
-
-def hangman_6():
-    rt(180)
-    fd(25)
-    lt(60)
-    fd(50)
-    lt(90)
-    fd(55)
-
-
-def hangman_7():
-    fd(20)
-
-
-def hangman_8():
-    rt(45)
-    fd(50)
-
-
-def hangman_9():
-    fd(25)
-
-
-def hangman_10():
-    rt(180)
-    fd(75)
-    rt(90)
-    fd(50)
-
-
-def hangman_11():
-    fd(25)
-    print('You may now close the turtle. ')
-    done()
-
-
-
-def game_loop():
-
-    input("Press 'Enter' to play Hangman!  ")  # starts game
-    clear_screen()  # clears screen
-    words = choose_word()  # chooses a word
-    word = words[0]  # converts word into a str from list
-    word_guessed = []  # word in '-' and letter form
-    for _ in word:
-        word_guessed.append("-") # create an unguessed, blank version of the word
-    joined_word = None # joins the words in the list word_guessed
-    tries = 10  # how many times you are aloud to fail
-    guessed_letters = []  # list of all letters guessed
-    hangman_1()  # Draws hangman
-    while tries != 0 and "-" in word_guessed:
-        print("\nYou have {} attempts remaining".format(tries))
-        strs = ''.join(word_guessed)
-        print(strs)
-        try:
-            player_guess = str(input("\nPlease select a letter between A-Z" + "\n> ")).lower()
-        except ValueError:  # check valid input
-            print("That is not valid input. Please try again.")
-            continue
-        else:
-            if not player_guess.isalpha():  # check the input is a letter. Also checks an input has been made.
-                print("That is not a letter. Please try again.")
-                continue
-            elif len(player_guess) > 1:  # check the input is only one letter
-                print("That is more than one letter. Please try again.")
-                continue
-            elif player_guess in guessed_letters:  # check it letter hasn't been guessed already
-                print("You have already guessed that letter. Please try again.")
-                continue
-            else:
-                pass
-
-        guessed_letters.append(player_guess)
-
-        for letter in range(len(word)):
-            if player_guess.lower() == (word[letter].lower()):
-                word_guessed[letter] = player_guess  # replace all letters in the chosen word that match the players guess
-                pygame.init()
-                drums = pygame.mixer.Sound("/Users/sdhadwal/Downloads/drum_roll_y.wav")
-                drums.play()
-
-
-        if player_guess.lower() not in word.lower():
-            tries -= 1
-            pygame.init()
-            gasp = pygame.mixer.Sound("/Users/sdhadwal/Downloads/gasp_x.wav")
-            gasp.play()
-            if HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[1]:
-                hangman_2()
-            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[2]:
-                hangman_3()
-            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[3]:
-                hangman_4()
-            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[4]:
-                hangman_5()
-            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[5]:
-                hangman_6()
-            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[6]:
-                hangman_7()
-            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[7]:
-                hangman_8()
-            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[8]:
-                hangman_9()
-            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[9]:
-                hangman_10()
-            elif HANGMAN[(len(HANGMAN) - 1) - tries] == HANGMAN[10]:
-                hangman_11()
-
-    if "-" not in word_guessed:  # no blanks remaining
-        print("\nCongratulations! {} was the word!".format(word))
-        pygame.init()
-        cymbal = pygame.mixer.Sound("/Users/sdhadwal/Downloads/applause3.wav")
-        cymbal.play()
-        reset()
-    else:  # loop must have ended because attempts reached 0
-        print("\nUnlucky! The word was {}.".format(word))
-
-
-choice = input('Would you like to play Hangman?')
-if choice.lower() == 'yes' or 'y':
-    game_loop()
-else:
-    sys.exit()
-while 0 < 1:
-    print("\nWould you like to play again?")
-    response = input("> ").lower()
-    if response not in ("yes", "y"):
-        print('Okay, see you later!')
-        sys.exit()
-    else:
-        game_loop()
